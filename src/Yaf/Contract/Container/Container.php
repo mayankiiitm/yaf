@@ -1,4 +1,5 @@
 <?php
+namespace Yaf\Contract\Container;
 interface Container {
-    public function make($class);
+    public function bind($service,$class);
 }
