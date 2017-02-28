@@ -42,6 +42,7 @@ class Container implements ContainerContract, ArrayAccess
         $class=$this->getBinding($service) ?? $service;
         $singelton=$this->isSingelton($service);
         if ($singelton) {
+            $instance = $this->getSingelton($service) ?? $this->resolve($class);
         }else{
         	$instance= $this->resolve($class);	
         }
