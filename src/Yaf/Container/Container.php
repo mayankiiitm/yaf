@@ -11,18 +11,18 @@ use ReflectionException;
 
 class Container implements ContainerContract, ArrayAccess
 {
-    public $services=[];
+    protected $services=[];
     
     protected $instances=[];
     
     protected $buildStack=[];
 
-    public function bind($service, $class=null) 
+    public function bind($service, $class=null, $singelton=false) 
     {
         if(is_null($class)){
             $class=$service;
         }
-        $this->services[$service]= $this->getClosure($class);
+        $this->services[$service]= ['binding'=>$this->getClosure($class),'singelton'=>$singelton];
     }
     
     protected function getClosure($class)
@@ -38,13 +38,39 @@ class Container implements ContainerContract, ArrayAccess
     
     public function make($service)
     {
-        $class=$this->services[$service] ?? $service;
-        return $this->resolve($class);
+   
+        $class=$this->getBinding($service) ?? $service;
+        $singelton=$this->isSingelton($service);
+        if ($singelton) {
+        }else{
+        	$instance= $this->resolve($class);	
+        }
+        $this->bindInstance($service,$instance);
+        return $instance;
     }
-    
+
+    public function isSingelton($service)
+    {
+    	return $this->services[$service]['singelton'] ?? false;
+    }
+    protected function bindInstance($service,$instance)
+    {
+    	$this->instances[$service]=$instance;
+    	return $this;
+    }
+
+    protected function getSingelton($service)
+    {
+    	return $this->instances[$service] ?? null;
+    }
+    public function getInstance($service)
+    {
+    	return $this->instance[$service] ?? null;
+    }
+
     public function getBinding($service)        
     {
-        return $this->services[$service] ?? null;
+        return $this->services[$service]['binding'] ?? null;
     }
     
     protected function resolve($class)
@@ -94,33 +120,28 @@ class Container implements ContainerContract, ArrayAccess
         }
         throw new LogicException($message);
     }
-    
-    public function instance($service, $instance) {
-        
-    }
-
-    public function rebind($service, $class) {
-        
-    }
 
     public function unbind($service) {
-        
+     	if (isset($this->services[$service])) {
+     		unset($this->services[$service]);   	
+     	}
+     	return $this;
     }
 
     public function offsetExists($offset): bool {
-        
+        return isset($this->instances[$offset]);
     }
 
     public function offsetGet($offset) {
-        
+        return $this->make($offset);
     }
 
     public function offsetSet($offset, $value): void {
-        
+        $this->bindInstance($offset,$value);
     }
 
     public function offsetUnset($offset): void {
-        
+        unset($this->instances[$offset]);
     }
 
 }
