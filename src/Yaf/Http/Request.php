@@ -7,8 +7,8 @@ use Yaf\Contract\Http\Request AS RequestContract;
 class Request implements RequestContract
 {
     
-    public function get() {
-        return 1;
+    public function get() 
+    {
+        return $_GET;
     }
-
 }
