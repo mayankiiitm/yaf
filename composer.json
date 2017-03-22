@@ -1,0 +1,16 @@
+{
+    "name": "mayankiiitm/yaf",
+    "description": "Yet another framework.",
+    "authors": [
+        {
+            "name": "Mayank KUmar",
+            "email": "mayankkumariiitm@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Yaf\\": "src/Yaf/"
+        }
+    }
+}
