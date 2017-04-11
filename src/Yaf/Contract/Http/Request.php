@@ -2,5 +2,5 @@
 namespace Yaf\Contract\Http;
 interface Request
 {
-    public function get();
+    public static function capture(): Request;
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Yaf\Support;
+namespace Yaf\Support\Parameter;
 class Parameter
 {
     protected $parameters;
